@@ -22,8 +22,12 @@
         // Add image to div id = game
         let game = document.getElementById('game');
         let newimg = document.createElement('img');
+        // The goal here is to add variables that can be used to make the pacmen open
+        // and close their mouths.
+        let mouthCounter = 1;
+        let mouthIncrement = 1;
         newimg.style.position = 'absolute';
-        newimg.src = 'PacMan1.png';
+        newimg.src = pacArray[0][0];
         newimg.width = 100;
         newimg.style.left = position.x;
         newimg.style.top = position.y;
@@ -34,7 +38,9 @@
         return {
             position,
             velocity,
-            newimg
+            newimg,
+            mouthCounter, // Incrementing this in update() will allow for open close
+            mouthIncrement // Positive or negative based on open or close
         }
     }
 
@@ -42,33 +48,65 @@
         //loop over pacmen array and move each one and move image in DOM
         pacMen.forEach((item) => {
             checkCollisions(item);
+            //The following determines whether a pacman's mouth is open or closed
+            item.mouthCounter += item.mouthIncrement;
+            if (item.mouthCounter === 20) {
+                item.mouthIncrement = - item.mouthIncrement;
+                if (item.velocity.x > 0) {
+                    item.newimg.src = pacArray[0][1];
+                }
+                else {
+                    item.newimg.src = pacArray[1][1];
+                }
+            }
+            if (item.mouthCounter === 0) {
+                item.mouthIncrement = - item.mouthIncrement;
+                if (item.velocity.x > 0) {
+                    item.newimg.src = pacArray[0][0];
+                }
+                else {
+                    item.newimg.src = pacArray[1][0];
+                }
+            }
+
             item.position.x += item.velocity.x;
             item.position.y += item.velocity.y;
 
             item.newimg.style.left = item.position.x;
             item.newimg.style.top = item.position.y;
+
+            
         })
         setTimeout(update, 20);
     }
 
     function checkCollisions(item) {
+        
   // Detects collisions with walls and causes Pacmen to reverse direction
   // Also changes the Pacmen images based on which direction they are moving on x axis
     if ((item.position.x + item.velocity.x + item.newimg.width > window.innerWidth) || 
         (item.position.x + item.velocity.x < 0)) {
         item.velocity.x = -item.velocity.x;
         //The following changes which direction the Pacmen are facing on a wall hit
-        if (item.velocity.x < 0) {
-            item.newimg.src = "PacMan3.png";
+        if ((item.velocity.x < 0) && (item.newimg.src = pacArray[0][0])) {
+            item.newimg.src = pacArray[1][0];
         }
-        else {
-            item.newimg.src = "PacMan1.png";
+        if ((item.velocity.x < 0) && (item.newimg.src = pacArray[0][1])) {
+            item.newimg.src = pacArray[1][1];
         }
+        if ((item.velocity.x > 0) && (item.newimg.src = pacArray[1][0])) {
+            item.newimg.src = pacArray[0][0];
         }
+        if ((item.velocity.x > 0) && (item.newimg.src = pacArray[1][1])) {
+            item.newimg.src = pacArray[0][1];
+        };
+    };
     if ((item.position.y + item.velocity.y + item.newimg.height > window.innerHeight) || 
-        (item.position.y + item.velocity.y < 0)) 
+        (item.position.y + item.velocity.y < 0)) {
         item.velocity.y = -item.velocity.y;
-};
+        };
+    
+}
 
     function makeOne() {
         pacMen.push(makePac()); // add a new PacMan
