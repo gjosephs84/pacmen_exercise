@@ -19,8 +19,10 @@ let timeout;
         let position = setToRandom(200);
         let initialY = position.y;
         if (initialY < 125) {
-            position.y += 100
-        }
+            console.log("Triggered");
+            console.log(position.y);
+            position.y += 150
+        };
         // Add image to div id = game
         let game = document.getElementById('game');
         let newimg = document.createElement('img');
@@ -33,6 +35,7 @@ let timeout;
         newimg.width = 100;
         newimg.style.left = position.x;
         newimg.style.top = position.y;
+        console.log(position.y);
 
         // add new Child image to game
         game.appendChild(newimg);
