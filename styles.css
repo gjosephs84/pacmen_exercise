@@ -1,0 +1,8 @@
+.game-button {
+    width: 150;
+    height: 30;
+    border-radius: 10px;
+    color: white;
+    background-color: #BD4F6C;
+    border-color: #BD4F6C;
+}
